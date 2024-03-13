@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Messages with Progressive Display, Checklist, Spinner, and Input</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             display: flex;
@@ -13,6 +14,42 @@
             position: relative;
             padding: 20px 0;
         }
+
+
+	@media (max-width: 600px) {
+	    body {
+		padding: 15px; /* Adjusted for better spacing */
+	    }
+	    h1, .popup h1 {
+		font-size: 26px; /* Increased size for readability */
+	    }
+	    h2, .popup h2 {
+		font-size: 22px; /* Increased size for readability */
+	    }
+	    .popup {
+		padding: 10px; /* Reduced padding for small screens */
+		width: 90%; /* Use a percentage-based width for better adaptability */
+		min-width: 260px; /* Prevent the popup from becoming too narrow */
+		max-width: none; /* Override any max-width set elsewhere for small screens */
+	    }
+	    .input-button-container textarea, .input-button-container button {
+		font-size: 16px; /* Larger font size for easier reading and interaction */
+		padding: 10px; /* Larger padding for easier interaction */
+	    }
+	    .btn {
+		min-width: 100px; /* Ensure buttons are easily tappable */
+		padding: 10px 15px; /* Larger padding for a better touch target */
+	    }
+	}
+
+	@media (max-width: 360px) {
+	    .popup {
+		width: 95%; /* Allow the popup to use more of the screen on very small devices */
+		padding: 8px; /* Adjust padding to ensure content has enough space */
+	    }
+	}
+
+
         .message-text {
             visibility: hidden; /* Initially hide the message text */
         }
