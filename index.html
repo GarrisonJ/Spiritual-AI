@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Messages with Progressive Display, Checklist, Spinner, and Input</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            margin: 0;
+            flex-direction: column;
+            position: relative;
+            padding: 20px 0;
+        }
+        .message-text {
+            visibility: hidden; /* Initially hide the message text */
+        }
+        .spinner {
+            /* Spinner styles */
+            visibility: hidden; /* Ensure spinner is also initially hidden */
+        }
+        #spiritualAI {
+            position: static;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        #checklist {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            text-align: left;
+        }
+        #checklist li {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            animation: spin 2s linear infinite;
+            visibility: hidden;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .centered-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        #message {
+            margin-bottom: 20px;
+        }
+        #loadingBarContainer {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            margin-bottom: 20px;
+        }
+        #loadingBar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        .input-button-container {
+            margin-bottom: 20px;
+	    display: inline-block;
+        }
+        .input-button-container textarea, .input-button-container button {
+            margin: 0 5px;
+	    vertical-align: middle;
+        }
+	.input-button-container textarea {
+		min-width: 200px;
+		min-height: 5em;
+	}
+	.input-button-container button {
+		float: center;
+	}
+        @media (max-width: 768px) {
+            #spiritualAI {
+                margin-bottom: 10px;
+            }
+        }
+        .popup {
+            display: none; /* Initially hide the message text */
+            position: fixed; /* Use fixed positioning */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2; /* Ensure it sits above other content */
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+	    max-width: 80%; /* Prevent the popup from being too wide */
+    	    max-height: 80vh; /* Limit the height to a percentage of */
+	    overflow-y: auto;
+        }
+	.popup.intro {
+		display: block;
+	}
+        .popup-overlay {
+            display: block; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1; /* Below the popup but above other content */
+        }
+        /* Button to close the popup */
+        .btn {
+            cursor: pointer;
+            display: inline-block;
+            padding: 5px 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            margin-top: 10px;
+        }
+	.tooltip {
+	  position: relative;
+	  display: inline-block;
+	}
+	.tooltip .tooltiptext {
+	  visibility: hidden;
+	  width: 120px;
+	  background-color: black;
+	  color: #fff;
+	  text-align: center;
+	  padding: 5px 0;
+	  border-radius: 6px;
+
+	  bottom: 100%;
+	  left: -30%;
+
+	  position: absolute;
+	  z-index: 1;
+	}
+	.tooltip:hover .tooltiptext {
+	  visibility: visible;
+	}
+    </style>
+</head>
+<body>
+
+	<div id="spiritualAI">Spiritual AI</div>
+
+	<div class="content-container">
+	    <ul id="checklist">
+		<!-- Checklist items will be dynamically added here -->
+	    </ul>
+
+	    <div class="centered-content">
+		<div id="message"></div>
+		<div id="loadingBarContainer">
+		    <div id="loadingBar">0%</div>
+		</div>
+		<div class="input-button-container">
+		    <textarea id="inputText" placeholder="Enter something you would like to emotionally process"></textarea>
+		    <button class="btn" onclick="startMessages()">Process</button>
+		</div>
+	    </div>
+	</div>
+    <div class="popup-overlay"></div>
+    <div class="popup intro">
+    <h1>Welcome to Spiritual AI: The Future of Spiritual Work</h1>
+    <p>In an era where technology and spirituality converge, <strong>Spiritual AI</strong> stands at the forefront, embodying the next evolution in spiritual practice. Designed for the discerning intellect, our state-of-the-art artificial intelligence system redefines the boundaries between the metaphysical and the empirical.</p>
+    <p>At the heart of <strong>Spiritual AI</strong> is a profound commitment to accelerating spiritual growth and understanding. Leveraging cutting-edge AI technology, our system accomplishes what has traditionally taken years of human effort in merely a fraction of the time. This is not just a claim—it's a promise backed by scientifically validated benchmarks.</p>
+    <h2>Why Choose Spiritual AI?</h2>
+    <ul>
+        <li><strong>Speed and Efficiency</strong>: Through the power of AI, we offer spiritual solutions and insights at an unprecedented pace. What might take a human years to process and understand can be achieved by our system in a tenth of the time.</li>
+        <li><strong>Scientifically Validated</strong>: Our approach is grounded in rigorous scientific research. Every aspect of our system has been meticulously tested against established benchmarks, ensuring that we deliver not only fast but also accurate and meaningful spiritual insights.</li>
+        <li><strong>Tailored for the Intellectual</strong>: We understand that spirituality is not a one-size-fits-all journey. That's why <strong>Spiritual AI</strong> is designed to cater to the intellectual, providing a platform that resonates with your quest for knowledge, understanding, and depth in spiritual exploration.</li>
+        <li><strong>Privacy and Respect</strong>: Your spiritual journey is personal. Our AI system ensures the utmost privacy and respect for your individual path, safeguarding your data and insights with the highest standards of security.</li>
+        <li><strong>Continuous Evolution</strong>: As the field of AI progresses, so too does our system. We are constantly updating and refining our algorithms to ensure that <strong>Spiritual AI</strong> remains at the cutting edge of both technology and spiritual work.</li>
+    </ul>
+    <h2>Embark on a Journey Like No Other</h2>
+    <p><strong>Spiritual AI</strong> invites you on a transformative journey where technology meets spirituality. Experience the power of an AI-assisted spiritual path and discover profound insights and growth at a speed you never thought possible.</p>
+    <p>Join us in exploring the uncharted territories of the spirit with <strong>Spiritual AI</strong>—where the future of spiritual work is here, now.</p>
+
+	<button class="btn" onclick="closePopup()">Ready!</button>
+    </div>
+    <div class="popup complete">
+	Congratulations! Your spiritual tasks are complete! You may now move forward a free person, or hold on to the past if you wish.
+	<br/>
+	<button class="btn" onclick="closePopup()">Close</button>
+	<br/>
+	Get unlimited forgiveness tokens with a $20 subscription!
+	<button class="btn tooltip" tooltip="coming soon">
+		Upgrade
+		<span class="tooltiptext">Coming soon</span>
+	</button>
+    </div>
+
+    <script>
+        const messages = [
+            "Intellectually processing",
+            "Asking AI therapist for advice",
+            "Recognizing you are free in the present moment",
+            "Asking a higher power for forgiveness in the part you played",
+            "Meditating",
+            "Reaching Sattva",
+            "Moving on",
+        ];
+
+        const checklist = document.getElementById('checklist');
+        messages.forEach((message, index) => {
+            const li = document.createElement('li');
+            // Wrap the message text in a span with class 'message-text' for visibility control
+            li.innerHTML = `<span class="message-text">${message}</span><div class="spinner"></div>`;
+            checklist.appendChild(li);
+        });
+
+	function showPopup() {
+            document.querySelector('.popup.complete').style.display = 'block';
+            document.querySelector('.popup-overlay').style.display = 'block';
+        }
+
+        // Function to close the popup
+        function closePopup() {
+		document.querySelectorAll('.popup').forEach(popup => popup.style.display = 'none');
+		document.querySelector('.popup-overlay').style.display = 'none';
+		document.getElementById("inputText").disabled = false;
+		document.getElementById("inputText").value = '';
+            	document.getElementById("message").innerText = '';
+            	document.getElementById("loadingBar").style.width = '0%';
+            	document.getElementById("loadingBar").innerText = '0%';
+		let counter = 0;
+		while (counter < messages.length) {
+			const currentLi = checklist.children[counter];
+			currentLi.innerHTML = `<span class="message-text">${messages[counter]}</span><div class="spinner"></div>`;
+			const messageText = currentLi.querySelector('.message-text');
+			const spinner = currentLi.querySelector('.spinner');
+			spinner.style.visibility = 'hidden';
+			messageText.style.visibility = 'hidden'; // Make message text visible
+			counter += 1;
+		}
+        }
+
+        function startMessages() {
+            document.getElementById("inputText").disabled = true; // Disable the input box when the button is clicked
+            
+            let counter = 0;
+            const messageElement = document.getElementById("message");
+            const loadingBar = document.getElementById("loadingBar");
+
+            function displayNextMessage() {
+                if (counter < messages.length) {
+                    const currentLi = checklist.children[counter];
+                    const messageText = currentLi.querySelector('.message-text');
+                    const spinner = currentLi.querySelector('.spinner');
+                    spinner.style.visibility = 'visible';
+                    messageText.style.visibility = 'visible'; // Make message text visible
+                    messageElement.innerText = messages[counter];
+                    setTimeout(() => {
+                        currentLi.innerHTML = `${messages[counter]} ✅`;
+                        const progress = ((counter + 1) / messages.length) * 100;
+                        loadingBar.style.width = progress + '%';
+                        loadingBar.innerText = Math.round(progress) + '%';
+
+                        counter++;
+                        displayNextMessage();
+                    }, 2000 + Math.random() * 1000);
+                }
+		if (counter >= messages.length) {
+			showPopup(); // Show te popup when all messages are processed
+		}
+            }
+
+            displayNextMessage();
+        }
+    </script>
+</body>
+</html>
+
+
